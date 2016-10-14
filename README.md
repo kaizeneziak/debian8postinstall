@@ -1,7 +1,7 @@
 # Debian 8 Jessie Post-Installation - En cours de réalisation
 ## Fonctionnalités
 Ce script shell permet de réaliser diverses opérations après l'installation d'une machine sous Debian 8 Jessie :
-- Installation et configuration de **Nginx** (en développement)
+- Installation et configuration de **Nginx** 
 - Installation et configuration de **Php7-fpm** (en développement)
 - Installation et configuration de **Mariadb-client** (en développement)
 - Installation et configuration de **Mariadb-server** (en développement)
