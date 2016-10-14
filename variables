@@ -1,0 +1,112 @@
+####################################
+# VARIABLES DEBIAN8POSTINSTALL
+####################################
+
+####################################
+# PATH
+####################################
+# PATH DU SCRIPT DEBIAN8POSTINSTALL
+PATH_CURRENT=`pwd`
+PATH_SCRIPT="$PATH_CURRENT/scripts"
+PATH_CONFS="$PATH_CURRENT/confs"
+PATH_LOGS="$PATH_CURRENT/logs"
+PATH_FUNCTIONS="$PATH_CURRENT/functions"
+
+# PATH CONF
+PATH_CONFS_LETSENCRYPT="$PATH_CONFS/letsencrypt"
+PATH_CONFS_MARIADB="$PATH_CONFS/mariadb"
+PATH_CONFS_NGINX="$PATH_CONFS/nginx"
+PATH_CONFS_PHP7FPM="$PATH_CONFS/php7fpm"
+PATH_CONFS_SOURCES_LIST_D="$PATH_CONFS/sources.list.d"
+PATH_CONFS_VARNISH="$PATH_CONFS/varnish"
+PATH_CONFS_VIM="$PATH_CONFS/vim"
+PATH_CONFS_WORDPRESS="$PATH_CONFS/wordpress"
+
+# PATH SOURCES.LIST.D
+PATH_APT="/etc/apt"
+PATH_APT_SOURCES_LIST_D="$PATH_APT/sources.list.d"
+
+####################################
+# SCRIPTS
+####################################
+# Scripts d'installation
+SCRIPT_INSTALL_LETSENCRYPT="$PATH_SCRIPT/install-letsencrypt.sh"
+SCRIPT_INSTALL_MARIADB_CLIENT="$PATH_SCRIPT/install-mariadb-client.sh"
+SCRIPT_INSTALL_MARIADB_SERVER="$PATH_SCRIPT/install-mariadb-server.sh"
+SCRIPT_INSTALL_NGINX="$PATH_SCRIPT/install-nginx.sh"
+SCRIPT_INSTALL_PHP7FPM="$PATH_SCRIPT/install-php7fpm.sh"
+SCRIPT_INSTALL_VARNISH="$PATH_SCRIPT/install-varnish.sh"
+SCRIPT_INSTALL_WORDPRESS="$PATH_SCRIPT/install-wordpress.sh"
+
+# Scripts de configuration
+SCRIPT_CONFIG_LETSENCRYPT="$PATH_SCRIPT/config-letsencrypt.sh"
+SCRIPT_CONFIG_MARIADB_CLIENT="$PATH_SCRIPT/config-mariadb-client.sh"
+SCRIPT_CONFIG_MARIADB_SERVER="$PATH_SCRIPT/config-mariadb-server.sh"
+SCRIPT_CONFIG_NGINX="$PATH_SCRIPT/config-nginx.sh"
+SCRIPT_CONFIG_PHP7FPM="$PATH_SCRIPT/config-php7fpm.sh"
+SCRIPT_CONFIG_VARNISH="$PATH_SCRIPT/config-varnish.sh"
+SCRIPT_CONFIG_VARNISH_DDOS="$PATH_SCRIPT/config-varnish-ddos.sh"
+SCRIPT_CONFIG_VARNISH_FIREWALL="$PATH_SCRIPT/config-varnish-firewall.sh"
+SCRIPT_CONFIG_WORDPRESS="$PATH_SCRIPT/config-wordpress.sh"
+
+####################################
+# DEPOTS
+####################################
+DEPOT_MARIADB="deb [arch=amd64,i386] http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.1/debian jessie main"
+
+####################################
+# FICHIERS 
+####################################
+
+# FICHIER CONFIGURATION DEBIAN8POSTINSTALL
+DEBIAN8POSTINSTALL_CONF="$PATH_CURRENT/config"
+
+# FICHIERS SOURCES.LIST
+FILE_SOURCES_LIST="$PATH_APT/sources.list"
+SOURCES_LIST_MARIADB="$PATH_SOURCES_LIST/mariadb.list"
+
+# FICHIERS WORDPRESS
+WORDPRESS_TARGZ_LATEST="latest.tar.gz"
+WORDPRESS_CONFIG="wp-config.php"
+WORDPRESS_CONFIG_SAMPLE="wp-config-sample.php"
+
+# FICHIERS TEMPORAIRES
+TEMP_DB="db.php"
+TEMP_AUTH="auth.html"
+TEMP_RESULTAT="/tmp/result"
+
+#####################################
+# GPG KEY
+####################################
+GPG_MARIADB="keyserver.ubuntu.com 0xcbcb082a1bb943db"
+
+#####################################
+# URL
+####################################
+URL_WORDPRESS_LATEST="https://wordpress.org/$WORDPRESS_TARGZ_LATEST"
+URL_WORDPRESS_API_AUTH="https://api.wordpress.org/secret-key/1.1/salt/"
+
+#####################################
+# ADRESSES IP
+####################################
+WEB_SERVER=`/sbin/ifconfig|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'`
+
+####################################
+# REGEX
+####################################
+REGEX_URL_WITHOUT_HTTP="([[:alnum:]]+)\.([a-zA-Z0-9-]+)\.([a-z]{2,})"
+REGEX_IP_ADDRESS="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+
+####################################
+# PAQUETS
+####################################
+APT_PREREQUIS="software-properties-common"
+APT_MARIADB_CLIENT="mariadb-client"
+APT_MARIADB_SERVER="mariadb-server mariadb-client"
+APT_VARNISH=""
+APT_WHIPTAIL="whiptail"
+
+####################################
+# LOGS FILES
+####################################
+LOG_OUT_FILE="$PATH_LOGS/log-`date +%Y%m%d`-`date +%H`h`date +%M`m`date +%S`s.log"
