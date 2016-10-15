@@ -1,0 +1,25 @@
+####################################
+# PATH
+####################################
+PATH_CONFS="$PATH_FEATURE_PHP7FPM/confs"
+
+PATH_PHP7="/etc/php/7.0"
+PATH_PHP7_FPM="$PATH_PHP7/fpm"
+PATH_NGINX_CONF_D="/etc/nginx/conf.d/"
+PATH_PHP7_MODS="$PATH_PHP7/mods-available"
+####################################
+# FICHIERS
+####################################
+PHP7FPM="php7.0-fpm"
+PHP7FPM_APT="php7.0 php7.0-fpm php7.0-mysql php7.0-curl php7.0-json php7.0-gd php7.0-mcrypt php7.0-msgpack php7.0-memcached php7.0-intl php7.0-sqlite3 php7.0-gmp php7.0-geoip php7.0-mbstring php7.0-xml php7.0-zip"
+PHP7FPM_DEPOT="deb http://packages.dotdeb.org jessie all"
+PHP7FPM_SOURCES_LIST="$PATH_CONFS/php7fpm.list"
+PHP7FPM_GPG="https://www.dotdeb.org/dotdeb.gpg"
+
+PHP7FPM_VAR_TIMEZONE=";date.timezone"
+PHP7FPM_INI="$PATH_PHP7_FPM/php.ini"
+PHP7FPM_NGINX_CONF="$PATH_NGINX_CONF_D/php7.0-fpm.conf"
+
+PHP7FPM_OPCACHE="$PATH_CONFS/opcache.ini"
+PHP7FPM_CONF_INI="$PATH_CONFS/php.ini"
+PHP7FPM_CONF_PHP_CONF="$PATH_CONFS/php7.0-fpm.conf"
