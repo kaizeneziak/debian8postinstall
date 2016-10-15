@@ -1,0 +1,31 @@
+####################################
+# PATH
+####################################
+PATH_CONFS="$PATH_FEATURE_MARIADB/confs"
+
+PATH_MYSQL="/etc/mysql"
+PATH_INIT_D="/etc/init.d"
+####################################
+# FICHIERS
+####################################
+SCRIPT_INSTALL_MARIADB_SERVER_LOCAL="$PATH_FEATURE_MARIADB/install-mariadb-server-local.sh"
+SCRIPT_INSTALL_MARIADB_SERVER_REMOTE="$PATH_FEATURE_MARIADB/install-mariadb-server-remote.sh"
+SCRIPT_CONFIG_MARIADB_SERVER_LOCAL="$PATH_FEATURE_MARIADB/config-mariadb-server-local.sh"
+SCRIPT_CONFIG_MARIADB_SERVER_REMOTE="$PATH_FEATURE_MARIADB/config-mariadb-server-remote.sh"
+SCRIPT_CONFIG_MARIADB_SECURE_INSTALL="$PATH_FEATURE_MARIADB/config-mariadb-secure-install.sh"
+FILE_MARIADB_DEPOT_SRC="$PATH_CONFS/mariadb.list" # features/mariadb/confs/mariadb.list
+FILE_MARIADB_DEPOT_DST="$PATH_APT_SOURCES_LIST_D/mariadb.list" # /etc/apt/sources.list.d/mariadb.list
+
+FILE_MARIADB_DEBIAN_START_SRC="$PATH_CONFS/debian-start"
+FILE_MARIADB_DEBIAN_START_DST="$PATH_MYSQL/debian-start"
+
+FILE_MARIADB_DEBIAN_INIT_SRC="$PATH_CONFS/mysql"
+FILE_MARIADB_DEBIAN_INIT_DST="$PATH_INIT_D/mysql"
+####################################
+# VARIABLES
+####################################
+VAR_SERVICE_MARIADB="mysql"
+VAR_APT_MARIADB_PREREQUIS="python-software-properties software-properties-common"
+VAR_APT_MARIADB_CLIENT="mariadb-client"
+VAR_APT_MARIADB_SERVER="mariadb-server"
+VAR_GPG_MARIADB="keyserver.ubuntu.com 0xcbcb082a1bb943db" # Clé GPG permettant de vérifier l'intégrité du dépôt
