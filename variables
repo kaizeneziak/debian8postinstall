@@ -58,11 +58,6 @@ SCRIPT_INSTALL_WORDPRESS="$PATH_FEATURE_WORDPRESS/install-wordpress.sh"
 SCRIPT_CONFIG_WORDPRESS="$PATH_FEATURE_WORDPRESS/config-wordpress.sh"
 
 ####################################
-# DEPOTS
-####################################
-DEPOT_MARIADB="deb [arch=amd64,i386] http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.1/debian jessie main"
-
-####################################
 # FICHIERS 
 ####################################
 
@@ -82,11 +77,6 @@ WORDPRESS_CONFIG_SAMPLE="wp-config-sample.php"
 TEMP_DB="db.php"
 TEMP_AUTH="auth.html"
 TEMP_RESULTAT="/tmp/result"
-
-#####################################
-# GPG KEY
-####################################
-GPG_MARIADB="keyserver.ubuntu.com 0xcbcb082a1bb943db"
 
 #####################################
 # URL
@@ -109,8 +99,6 @@ REGEX_IP_ADDRESS="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]
 # PAQUETS
 ####################################
 APT_PREREQUIS="software-properties-common"
-APT_MARIADB_CLIENT="mariadb-client"
-APT_MARIADB_SERVER="mariadb-server mariadb-client"
 APT_VARNISH=""
 APT_WHIPTAIL="whiptail"
 
