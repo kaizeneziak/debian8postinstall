@@ -42,7 +42,7 @@ expect eof
 ")
 
 # Exécution du script mysql_secure_installation
-echo "${SECURE_MYSQL}"
+echo "${SECURE_MYSQL}" >> $LOG_FILE
 
 # Suppression du paquet expect
 exec_apt_remove "expect"

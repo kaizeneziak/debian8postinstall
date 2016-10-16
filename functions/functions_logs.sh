@@ -10,6 +10,9 @@
 # UTILISATION
 #	logs
 logs () {
+	if [ ! -d $PATH_LOGS ]; then
+		mkdir --parents $PATH_LOGS
+	fi
 	touch $LOG_OUT_FILE
         LOG_FILE=$LOG_OUT_FILE
 }

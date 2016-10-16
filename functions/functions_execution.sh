@@ -111,7 +111,7 @@ exec_apt_add_depot () {
 # UTILISATION
 #	exec_apt_update
 exec_apt_update () {
-        exec_command "aptitude -q update -y"
+        exec_command "aptitude -q=1 update -y"
         if [ $? -eq 0 ]; then
 		aff_message "ok" "Mise à jour de la liste des paquets"
 	else
@@ -126,7 +126,7 @@ exec_apt_update () {
 # UTILISATION
 #	exec_apt_upgrade
 exec_apt_upgrade () {
-        exec_command "aptitude -q upgrade -y"
+        exec_command "aptitude -q=1 upgrade -y"
         if [ $? -eq 0 ]; then
 		aff_message "ok" "Mise à jour de tous les paquets du système"
 	else
@@ -144,7 +144,7 @@ exec_apt_upgrade () {
 #	exec_apt_install_uniq "$PAQUET"
 exec_apt_install_uniq () {
         PAQUET=$1
-        exec_command "aptitude -q install $PAQUET -y"
+        exec_command "aptitude -q=1 install $PAQUET -y"
         if [ $? -eq 0 ]; then
 		aff_message "ok" "Installation du paquet `aff_important "$PAQUET"`"
 	else
@@ -162,7 +162,7 @@ exec_apt_install_uniq () {
 #       exec_apt_install_mariadb "$PAQUET"
 exec_apt_install_mariadb () {
         PAQUET=$1
-        exec_command "aptitude install -qq $PAQUET"
+        exec_command "aptitude -q=2 install $PAQUET -y"
         if [ $? -eq 0 ]; then
                 aff_message "ok" "Installation du paquet `aff_important "$PAQUET"`"
         else
@@ -182,7 +182,7 @@ exec_apt_install_mariadb () {
 exec_apt_install_multi () {
 	SERVICE=$1
 	PAQUETS=$2
-        exec_command "aptitude -q install $PAQUETS -y"
+        exec_command "aptitude -q=1 install $PAQUETS -y"
         if [ $? -eq 0 ]; then
 		aff_message "ok" "Installation des paquets pour $(aff_important "$SERVICE")"
 	else
@@ -200,7 +200,7 @@ exec_apt_install_multi () {
 #       exec_apt_install_prerequis "$PAQUETS"
 exec_apt_install_prerequis () {
         PAQUETS=$1
-        exec_command "aptitude -q install $PAQUETS -y"
+        exec_command "aptitude -q=1 install $PAQUETS -y"
         if [ $? -eq 0 ]; then
                 aff_message "ok" "Installation des prérequis"
         else
