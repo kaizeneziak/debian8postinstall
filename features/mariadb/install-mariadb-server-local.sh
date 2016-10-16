@@ -69,14 +69,14 @@ exec_apt_install_mariadb "$VAR_APT_MARIADB_SERVER"
 # LOCAL : Installer mariadb-client
 exec_apt_install_uniq "$VAR_APT_MARIADB_CLIENT"
 # LOCAL : Copie du fichier features/mariadb/confs/debian-start dans /etc/mysql/
-exec_copy_file "$FILE_MARIADB_DEBIAN_START_SRC" "$FILE_MARIADB_DEBIAN_START_DST"
+#exec_copy_file "$FILE_MARIADB_DEBIAN_START_SRC" "$FILE_MARIADB_DEBIAN_START_DST"
 # LOCAL : Copie du fichier features/mariadb/confs/mysql dans /etc/init.d/
-exec_copy_file "$FILE_MARIADB_DEBIAN_INIT_SRC" "$FILE_MARIADB_DEBIAN_INIT_DST"
+#exec_copy_file "$FILE_MARIADB_DEBIAN_INIT_SRC" "$FILE_MARIADB_DEBIAN_INIT_DST"
 # LOCAL : Redémarrer le service
 exec_service_restart "$VAR_SERVICE_MARIADB"
 
 # LOCAL : Lancer mysql_secure_installation
-bash $SCRIPT_CONFIG_MARIADB_SECURE_INSTALL $PATH_DEBIAN8POSTINSTALL $LOG_FILE
+bash $SCRIPT_CONFIG_MARIADB_SECURE_INSTALL $PATH_DEBIAN8POSTINSTALL $LOG_FILE $PASSWORD1
 # LOCAL : Modifier port d'écoute
 
 # LOCAL : Modifier le compte root

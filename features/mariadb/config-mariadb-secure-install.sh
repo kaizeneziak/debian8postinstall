@@ -7,6 +7,7 @@
 #
 PATH_DEBIAN8POSTINSTALL=$1
 LOG_FILE=$2
+CURRENT_MYSQL_PASSWORD=$3
 
 # Importation des variables
 . $PATH_DEBIAN8POSTINSTALL/variables # Importation des variables de haut niveau
@@ -18,8 +19,30 @@ LOG_FILE=$2
 . $PATH_DEBIAN8POSTINSTALL/functions/functions_execution.sh
 
 # PROGRAMME
-# Changer le mot de passe root : N
-# Supprimer les utilisateurs anonymes : Y
-# Désactiver les connexions distantes : Y
-# Supprimer la base de données test et les accès : Y
-# Recharger les privilèges : Y
+# Vérifier si le package expect est installé
+if [ $(dpkg-query -W -f='${Status}' expect 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+	exec_apt_install_uniq "expect"
+fi
+SECURE_MYSQL=$(expect -c "
+set timeout 3
+spawn mysql_secure_installation
+expect \"Enter current password for root (enter for none):\"
+send \"$CURRENT_MYSQL_PASSWORD\r\"
+expect \"root password?\"
+send \"n\r\"
+expect \"Remove anonymous users?\"
+send \"y\r\"
+expect \"Disallow root login remotely?\"
+send \"y\r\"
+expect \"Remove test database and access to it?\"
+send \"y\r\"
+expect \"Reload privilege tables now?\"
+send \"y\r\"
+expect eof
+")
+
+# Exécution du script mysql_secure_installation
+echo "${SECURE_MYSQL}"
+
+# Suppression du paquet expect
+exec_apt_remove "expect"

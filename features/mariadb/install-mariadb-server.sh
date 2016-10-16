@@ -19,7 +19,6 @@ LOG_FILE=$2
 
 # PROGRAMME
 
-aff_titre "Installation de MARIADB-SERVER"
 # Whiptail Server local ou distant ?
 CHOIX=$(whiptail --title "Installation de Mariadb Serveur" --menu "Quel type d'installation souhaitez-vous effectuer ?" 10 63 2 \
 "Local" "Installer Mariadb Serveur sur la machine locale" \
