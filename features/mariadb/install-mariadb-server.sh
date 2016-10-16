@@ -35,14 +35,6 @@ if [[ $CHOIX == "Remote" ]]; then
 else
 	exit 1
 fi
-# LOCAL : Install Prérequis
-# LOCAL : Import de la clé GPG
-# LOCAL : Ajouter le dépôt mariadb.list
-# LOCAL : Mise à jour des paquets
-# LOCAL : Installer mariadb-server et mariadb-client
-# LOCAL : Lancer mysql_secure_installation
-# LOCAL : Modifier port d'écoute
-# LOCAL : Modifier le compte root
 
 # REMOTE : WHIPTAIL MSG BOX - Nécessite que le serveur distant dispose d'un serveur SSH qui autorise la connexion du compte ROOT
 # REMOTE : Lancer script $SCRIPT_INSTALL_MARIADB_SERVER_REMOTE

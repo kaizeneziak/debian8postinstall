@@ -78,6 +78,25 @@ exec_service_restart "$VAR_SERVICE_MARIADB"
 # LOCAL : Lancer mysql_secure_installation
 bash $SCRIPT_CONFIG_MARIADB_SECURE_INSTALL $PATH_DEBIAN8POSTINSTALL $LOG_FILE $PASSWORD1
 # LOCAL : Modifier port d'écoute
-
+while true
+do
+	PORT_SQL=$(whiptail --title " Sécurisation de Mariadb Serveur " --inputbox "\nModifier le port d'écoute du serveur MariaDB permet de se protéger des tentatives de scan de ports.\n\nIl est conseillé de le modifier afin d'accroître la sécurité.\n\nPort d'écoute du serveur MariaDB :" 15 85 3306 3>&1 1>&2 2>&3)
+	if [ $? -eq 1 ]; then
+		exit 1
+	fi
+	if [[ "$PORT_SQL" =~ ^[0-9]+$ ]]; then
+		break
+	fi
+done
 # LOCAL : Modifier le compte root
-
+while true
+do
+	COMPTE_ROOT=$(whiptail --title " Sécurisation de Mariadb Serveur " --inputbox "\nModifier le nom d'utilisateur du compte root du serveur MariaDB permet de renforcer la sécurité et d'éviter les tentatives de bruteforce.\n\nIl est conseillé de le modifier afin d'accroître la sécurité.\n\nNouveau nom d'utilisateur du compte root du serveur MariaDB :" 15 85 secureroot 3>&1 1>&2 2>&3)
+	if [ $? -eq 1 ]; then
+		exit 1
+	fi
+	if [ ! -z $COMPTE_ROOT ]; then
+		break
+	fi
+done
+exec_command "mysql -u root -p'$PASSWORD1' -q 'UPDATE mysql.user SET USER='$COMPTE_ROOT' WHERE USER='root'; FLUSH PRIVILEGES;"

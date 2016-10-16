@@ -44,5 +44,10 @@ expect eof
 # Exécution du script mysql_secure_installation
 echo "${SECURE_MYSQL}" >> $LOG_FILE
 
+if [ $? -eq 0 ]; then
+	aff_message "ok" "Sécurisation de l'installation du serveur MariaDB"
+else
+	aff_message "ok" "Sécurisation de l'installation du serveur MariaDB"
+fi
 # Suppression du paquet expect
 exec_apt_remove "expect"
