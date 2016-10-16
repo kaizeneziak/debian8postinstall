@@ -21,6 +21,8 @@ FILE_MARIADB_DEBIAN_START_DST="$PATH_MYSQL/debian-start"
 
 FILE_MARIADB_DEBIAN_INIT_SRC="$PATH_CONFS/mysql"
 FILE_MARIADB_DEBIAN_INIT_DST="$PATH_INIT_D/mysql"
+
+FILE_MARIADB_MY_CNF="$PATH_MYSQL/my.cnf"
 ####################################
 # VARIABLES
 ####################################
@@ -29,3 +31,5 @@ VAR_APT_MARIADB_PREREQUIS="python-software-properties software-properties-common
 VAR_APT_MARIADB_CLIENT="mariadb-client"
 VAR_APT_MARIADB_SERVER="mariadb-server"
 VAR_GPG_MARIADB="keyserver.ubuntu.com 0xcbcb082a1bb943db" # Clé GPG permettant de vérifier l'intégrité du dépôt
+VAR_SQL_MARIADB_PORT="3306"
+
