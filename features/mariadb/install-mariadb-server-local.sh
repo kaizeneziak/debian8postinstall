@@ -107,17 +107,20 @@ do
 		break
 	fi
 done
+
 echo "RENAME USER 'root'@'127.0.0.1' TO '$COMPTE_ROOT'@'127.0.0.1';" > $FILE_SQL_UPDATE_USER_ROOT
 echo "RENAME USER 'root'@'::1' TO '$COMPTE_ROOT'@'::1';" >> $FILE_SQL_UPDATE_USER_ROOT
 echo "RENAME USER 'root'@'localhost' TO '$COMPTE_ROOT'@'localhost';" >> $FILE_SQL_UPDATE_USER_ROOT
 echo "FLUSH PRIVILEGES;" >> $FILE_SQL_UPDATE_USER_ROOT
-
+aff_message "debug" "COMPTE_ROOT="$COMPTE_ROOT
+aff_message "debug" "PASSWORD="$PASSWORD1
+aff_message "debug" "FILE_SQL_UPDATE_USER_ROOT="$FILE_SQL_UPDATE_USER_ROOT
 exec_command "mysql -u root -p$PASSWORD1 < $FILE_SQL_UPDATE_USER_ROOT"
 if [ $? -eq 0 ]; then
 	aff_message "ok" "Changement de l'utilisateur root mysql par $(aff_important "$COMPTE_ROOT")"
 else
 	aff_message "err" "Changement de l'utilisateur root mysql par $(aff_important "$COMPTE_ROOT")"
 fi
-rm -f $FILE_SQL_UPDATE_USER_ROOT
+#rm -f $FILE_SQL_UPDATE_USER_ROOT
 # LOCAL : Redémarrer le service
 exec_service_restart "$VAR_SERVICE_MARIADB"
