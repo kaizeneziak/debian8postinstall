@@ -88,7 +88,13 @@ do
 		break
 	fi
 done
+
 sed -i "s/$VAR_SQL_MARIADB_PORT/$PORT_SQL/g" $FILE_MARIADB_MY_CNF
+if [ $0 -eq 0 ]; then
+	aff_message "ok" "Modification du port d'écoute Mysql en $(aff_important "$PORT_SQL")"	
+else
+	aff_message "err" "Modification du port d'écoute Mysql en $(aff_important "$PORT_SQL")"
+fi
 
 # LOCAL : Modifier le compte root
 while true
@@ -101,7 +107,12 @@ do
 		break
 	fi
 done
-exec_command "mysql -u root -p'$PASSWORD1' -q 'UPDATE mysql.user SET USER='$COMPTE_ROOT' WHERE USER='root'; FLUSH PRIVILEGES;"
+exec_command "mysql -u root -p'$PASSWORD1' -e 'UPDATE mysql.user SET USER='$COMPTE_ROOT' WHERE USER='root'; FLUSH PRIVILEGES;"
+if [ $? -eq 0 ]; then
+	aff_message "ok" "Changement de l'utilisateur root mysql par $(aff_important "$COMPTE_ROOT")"
+else
+	aff_message "err" "Changement de l'utilisateur root mysql par $(aff_important "$COMPTE_ROOT")"
+fi
 
 # LOCAL : Redémarrer le service
 exec_service_restart "$VAR_SERVICE_MARIADB"
