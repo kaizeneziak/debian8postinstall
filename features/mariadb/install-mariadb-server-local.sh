@@ -73,7 +73,7 @@ exec_apt_install_uniq "$VAR_APT_MARIADB_CLIENT"
 # LOCAL : Copie du fichier features/mariadb/confs/mysql dans /etc/init.d/
 #exec_copy_file "$FILE_MARIADB_DEBIAN_INIT_SRC" "$FILE_MARIADB_DEBIAN_INIT_DST"
 # LOCAL : Redémarrer le service
-exec_service_restart "$VAR_SERVICE_MARIADB"
+#exec_service_restart "$VAR_SERVICE_MARIADB"
 
 # LOCAL : Lancer mysql_secure_installation
 bash $SCRIPT_CONFIG_MARIADB_SECURE_INSTALL $PATH_DEBIAN8POSTINSTALL $LOG_FILE $PASSWORD1
@@ -89,8 +89,8 @@ do
 	fi
 done
 
-sed -i "s/$VAR_SQL_MARIADB_PORT/$PORT_SQL/g" $FILE_MARIADB_MY_CNF
-if [ $0 -eq 0 ]; then
+sed -i -e "s/$VAR_SQL_MARIADB_PORT/$PORT_SQL/g" $FILE_MARIADB_MY_CNF
+if [ $? -eq 0 ]; then
 	aff_message "ok" "Modification du port d'écoute Mysql en $(aff_important "$PORT_SQL")"	
 else
 	aff_message "err" "Modification du port d'écoute Mysql en $(aff_important "$PORT_SQL")"
@@ -107,12 +107,17 @@ do
 		break
 	fi
 done
-exec_command "mysql -u root -p'$PASSWORD1' -e 'UPDATE mysql.user SET USER='$COMPTE_ROOT' WHERE USER='root'; FLUSH PRIVILEGES;"
+echo "RENAME USER 'root'@'127.0.0.1' TO '$COMPTE_ROOT'@'127.0.0.1';" > $FILE_SQL_UPDATE_USER_ROOT
+echo "RENAME USER 'root'@'::1' TO '$COMPTE_ROOT'@'::1';" >> $FILE_SQL_UPDATE_USER_ROOT
+echo "RENAME USER 'root'@'localhost' TO '$COMPTE_ROOT'@'localhost';" >> $FILE_SQL_UPDATE_USER_ROOT
+echo "FLUSH PRIVILEGES;" >> $FILE_SQL_UPDATE_USER_ROOT
+
+exec_command "mysql -u root -p$PASSWORD1 < $FILE_SQL_UPDATE_USER_ROOT"
 if [ $? -eq 0 ]; then
 	aff_message "ok" "Changement de l'utilisateur root mysql par $(aff_important "$COMPTE_ROOT")"
 else
 	aff_message "err" "Changement de l'utilisateur root mysql par $(aff_important "$COMPTE_ROOT")"
 fi
-
+rm -f $FILE_SQL_UPDATE_USER_ROOT
 # LOCAL : Redémarrer le service
 exec_service_restart "$VAR_SERVICE_MARIADB"
