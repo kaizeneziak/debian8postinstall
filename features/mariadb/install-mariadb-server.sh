@@ -26,11 +26,10 @@ CHOIX=$(whiptail --title "Installation de Mariadb Serveur" --menu "Quel type d'i
 
 if [[ $CHOIX == "Local" ]]; then
 	aff_titre "Installation de MariaDB Serveur en local"
-	bash $SCRIPT_INSTALL_MARIADB_SERVER_LOCAL $PATH_DEBIAN8POSTINSTALL $LOG_FILE
+	#bash $SCRIPT_INSTALL_MARIADB_SERVER_LOCAL $PATH_DEBIAN8POSTINSTALL $LOG_FILE
 fi
 if [[ $CHOIX == "Remote" ]]; then
-	aff_titre "Installation de MariaDB Serveur sur un serveur distant"
-	#bash $SCRIPT_INSTALL_MARIADB_SERVER_REMOTE $PATH_DEBIAN8POSTINSTALL $LOG_FILE
+	bash $SCRIPT_INSTALL_MARIADB_SERVER_REMOTE $PATH_DEBIAN8POSTINSTALL $LOG_FILE
 	echo "test"
 else
 	exit 1
