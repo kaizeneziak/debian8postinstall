@@ -18,7 +18,7 @@ aff_titre "Installation des prérequis"
 exec_apt_install_uniq "$APT_WHIPTAIL"
 # Programme
 RESULTATS=$(whiptail --title "Debian 8 Jessie Post-installation" --checklist \
-"Que souhaitez vous faire ?" 13 71 7 \
+"\nCe script post-installation permet d'installer et de configurer différents paquets. Sélectionner ceux que vous souhaitez installer dans la liste ci-dessous.\n\nPar défaut, tous les paquets sont cochés.\n\nQue souhaitez vous faire ?" 23 71 7 \
 "Nginx" "Installer et configurer NGINX" ON \
 "Php7-fpm" "Installer et configurer PHP7-FPM" ON \
 "Mariadb-server" "Installer et configurer Mariadb-Server" ON \

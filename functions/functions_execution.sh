@@ -415,7 +415,7 @@ exec_mysql () {
 	echo "RENAME USER 'root'@'localhost' TO '$MYSQL_USER'@'localhost';" >> $FILE_SQL_UPDATE_USER_ROOT
 	echo "FLUSH PRIVILEGES;" >> $FILE_SQL_UPDATE_USER_ROOT
 
-	mysql -u root -p$MYSQL_PASS mysql.user < $FILE_SQL_UPDATE_USER_ROOT >> $LOG_FILE 2>&1
+	mysql -u root -p$MYSQL_PASS < $FILE_SQL_UPDATE_USER_ROOT >> $LOG_FILE 2>&1
 	if [ $? -eq 0 ]; then
 		aff_message "ok" "Changement de l'utilisateur $(aff_important "root") mysql par $(aff_important "$MYSQL_USER")"
 	else
