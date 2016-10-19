@@ -115,7 +115,7 @@ echo "FLUSH PRIVILEGES;" >> $FILE_SQL_UPDATE_USER_ROOT
 aff_message "debug" "COMPTE_ROOT="$COMPTE_ROOT
 aff_message "debug" "PASSWORD="$PASSWORD1
 aff_message "debug" "FILE_SQL_UPDATE_USER_ROOT="$FILE_SQL_UPDATE_USER_ROOT
-exec_command_debug "mysql -u root -p$PASSWORD1 < $FILE_SQL_UPDATE_USER_ROOT"
+exec_command_debug "mysql -u root -p$PASSWORD1 \< $FILE_SQL_UPDATE_USER_ROOT"
 if [ $? -eq 0 ]; then
 	aff_message "ok" "Changement de l'utilisateur root mysql par $(aff_important "$COMPTE_ROOT")"
 else
