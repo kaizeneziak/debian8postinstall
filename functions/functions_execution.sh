@@ -144,11 +144,15 @@ exec_apt_upgrade () {
 #	exec_apt_install_uniq "$PAQUET"
 exec_apt_install_uniq () {
         PAQUET=$1
-        exec_command "aptitude -q=1 install $PAQUET -y"
-        if [ $? -eq 0 ]; then
-		aff_message "ok" "Installation du paquet `aff_important "$PAQUET"`"
-	else
-		aff_message "err" "Installation du paquet `aff_important "$PAQUET"`"
+
+	# Vérifier si le paquet $PAQUET est installé
+        if [ $(dpkg-query -W -f='${Status}' $PAQUET 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+                exec_command "aptitude -q=1 install $PAQUET -y"
+	        if [ $? -eq 0 ]; then
+			aff_message "ok" "Installation du paquet $(aff_important "$PAQUET")"
+		else
+			aff_message "err" "Installation du paquet $(aff_important "$PAQUET")"
+		fi
 	fi
 }
 
@@ -162,11 +166,15 @@ exec_apt_install_uniq () {
 #       exec_apt_install_mariadb "$PAQUET"
 exec_apt_install_mariadb () {
         PAQUET=$1
-        exec_command "aptitude -q=2 install $PAQUET -y"
-        if [ $? -eq 0 ]; then
-                aff_message "ok" "Installation du paquet `aff_important "$PAQUET"`"
-        else
-                aff_message "err" "Installation du paquet `aff_important "$PAQUET"`"
+
+	# Vérifier si le paquet $PAQUET est installé
+        if [ $(dpkg-query -W -f='${Status}' $PAQUET 2>/dev/null | grep -c "ok installed") -eq 0 ]; then	
+	        exec_command "aptitude -q=2 install $PAQUET -y"
+	        if [ $? -eq 0 ]; then
+        	        aff_message "ok" "Installation du paquet `aff_important "$PAQUET"`"
+	        else
+	                aff_message "err" "Installation du paquet `aff_important "$PAQUET"`"
+        	fi
         fi
 }
 
@@ -439,3 +447,140 @@ exec_mysql () {
 # UTILISATION
 #       exec_load
 #exec_load () {}
+
+##################################################################################################################
+# SSH
+##################################################################################################################
+
+# FONCTION
+#       exec_ssh_command $1 $2 $3 $4
+# PARAMETRES
+#       $1 : Utilisateur SSH
+#       $2 : Mot de passe de l'utilisateur
+#	$3 : Adresse IP du serveur SSH
+#	$4 : Commande à exécuter
+# BUT
+#	Exécuter une commande sur un serveur distant via SSH
+# UTILISATION
+#       exec_sshpass "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "$SSH_COMMAND"
+exec_ssh_command () {
+	SSH_USER=$1
+	SSH_PASS=$2
+	SSH_SERVER=$3
+	SSH_COMMAND=$4
+
+        exec_apt_install_uniq "sshpass"
+
+	sshpass -p $SSH_PASS ssh $SSH_USER@$SSH_SERVER "$SSH_COMMAND" >> $LOG_FILE 2>&1
+	if [ $? -eq 0 ];then
+		RETOUR=0
+	elif [ $? -eq 1 ];then
+		#aff_message "err" "Invalid command line argument"
+		RETOUR=1
+	elif [ $? -eq 2 ];then
+		aff_message "err" "Conflicting arguments given"
+		RETOUR=1
+	elif [ $? -eq 3 ];then
+		aff_message "err" "Conflicting arguments given"
+		RETOUR=1
+	elif [ $? -eq 4 ];then
+		aff_message "err" "Unrecognized response from ssh (parse error)"
+                RETOUR=1
+	elif [ $? -eq 5 ];then
+		aff_message "err" "Unrecognized response from ssh (parse error)"
+                RETOUR=1
+	elif [ $? -eq 6 ];then
+		aff_message "err" "Host public key is unknown. sshpass exits without confirming the new key."
+                RETOUR=1
+	fi
+	return $RETOUR
+}
+
+# FONCTION
+#       exec_ssh_script $1 $2 $3 $4
+# PARAMETRES
+#       $1 : Utilisateur SSH
+#       $2 : Mot de passe de l'utilisateur
+#       $3 : Adresse IP du serveur SSH
+#       $4 : Script à exécuter
+# BUT
+#       Exécuter un script sur un serveur distant via SSH
+# UTILISATION
+#       exec_sshpass "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "$SSH_SCRIPT"
+exec_ssh_script () {
+	SSH_USER=$1
+        SSH_PASS=$2
+        SSH_SERVER=$3
+        SSH_SCRIPT=$4
+
+        exec_apt_install_uniq "sshpass"
+
+        sshpass -p $SSH_PASS ssh $SSH_USER@$SSH_SERVER 'bash -s' < $SSH_SCRIPT >> $LOG_FILE 2>&1
+        if [ $? -eq 0 ];then
+                RETOUR=0
+        elif [ $? -eq 1 ];then
+                RETOUR=1
+        elif [ $? -eq 2 ];then
+                aff_message "err" "Conflicting arguments given"
+                RETOUR=1
+        elif [ $? -eq 3 ];then
+                aff_message "err" "Conflicting arguments given"
+                RETOUR=1
+        elif [ $? -eq 4 ];then
+                aff_message "err" "Unrecognized response from ssh (parse error)"
+                RETOUR=1
+        elif [ $? -eq 5 ];then
+                aff_message "err" "Unrecognized response from ssh (parse error)"
+                RETOUR=1
+        elif [ $? -eq 6 ];then
+                aff_message "err" "Host public key is unknown. sshpass exits without confirming the new key."
+                RETOUR=1
+        fi
+        return $RETOUR	
+}
+
+# FONCTION
+#       exec_ssh_copy $1 $2 $3 $4 $5
+# PARAMETRES
+#       $1 : Utilisateur SSH
+#       $2 : Mot de passe de l'utilisateur
+#       $3 : Adresse IP du serveur SSH
+#       $4 : Fichier source à copier
+#	$5 : Fichier de destination
+# BUT
+#       Copier un fichier sur un serveur distant via SSH
+# UTILISATION
+#       exec_ssh_copy "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "$SSH_SRC_FILE" "$SSH_DST_FILE"
+exec_ssh_copy () {
+        SSH_USER=$1
+        SSH_PASS=$2
+        SSH_SERVER=$3
+        SSH_SRC_FILE=$4
+	SSH_DST_FILE=$5
+
+        exec_apt_install_uniq "sshpass"
+
+        sshpass -p $SSH_PASS scp $SSH_SRC_FILE $SSH_USER@$SSH_SERVER:$SSH_DST_FILE >> $LOG_FILE 2>&1
+        if [ $? -eq 0 ];then
+                RETOUR=0
+        elif [ $? -eq 1 ];then
+                RETOUR=1
+        elif [ $? -eq 2 ];then
+                aff_message "err" "Conflicting arguments given"
+                RETOUR=1
+        elif [ $? -eq 3 ];then
+                aff_message "err" "Conflicting arguments given"
+                RETOUR=1
+        elif [ $? -eq 4 ];then
+                aff_message "err" "Unrecognized response from ssh (parse error)"
+                RETOUR=1
+        elif [ $? -eq 5 ];then
+                aff_message "err" "Unrecognized response from ssh (parse error)"
+                RETOUR=1
+        elif [ $? -eq 6 ];then
+                aff_message "err" "Host public key is unknown. sshpass exits without confirming the new key."
+                RETOUR=1
+        fi
+        return $RETOUR
+}
+
