@@ -393,4 +393,34 @@ exec_service_restart () {
 	exec_service_start $SERVICE
 }
 
+##################################################################################################################
+# MYSQL
+##################################################################################################################
 
+# FONCTION
+#       exec_mysql $1 $2 $3
+# PARAMETRES
+#       $1 : Login de l'utilisateur
+#	$2 : Mot de passe de l'utilisateur
+# BUT
+#       Exécuter les commandes SQL présentes dans le fichier SQL $FILE_SQL_UPDATE_USER_ROOT
+# UTILISATION
+#       exec_mysql "$MYSQL_USER" "$MYSQL_PASS"
+exec_mysql () {
+	MYSQL_USER=$1
+	MYSQL_PASS=$2
+	
+	echo "RENAME USER 'root'@'127.0.0.1' TO '$MYSQL_USER'@'127.0.0.1';" > $FILE_SQL_UPDATE_USER_ROOT
+	echo "RENAME USER 'root'@'::1' TO '$MYSQL_USER'@'::1';" >> $FILE_SQL_UPDATE_USER_ROOT
+	echo "RENAME USER 'root'@'localhost' TO '$MYSQL_USER'@'localhost';" >> $FILE_SQL_UPDATE_USER_ROOT
+	echo "FLUSH PRIVILEGES;" >> $FILE_SQL_UPDATE_USER_ROOT
+
+	mysql -u root -p $MYSQL_PASS < $FILE_SQL_UPDATE_USER_ROOT >> $LOG_FILE 2>&1
+	if [ $? -eq 0 ]; then
+		aff_message "ok" "Changement de l'utilisateur $(aff_important "root") mysql par $(aff_important "$MYSQL_USER")"
+	else
+		aff_message "err" "Changement de l'utilisateur $(aff_important "root") mysql par $(aff_important "$MYSQL_USER")"
+	fi
+
+	rm -f $FILE_SQL_UPDATE_USER_ROOT
+}
