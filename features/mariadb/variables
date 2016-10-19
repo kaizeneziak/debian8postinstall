@@ -35,4 +35,4 @@ VAR_APT_MARIADB_CLIENT="mariadb-client"
 VAR_APT_MARIADB_SERVER="mariadb-server"
 VAR_GPG_MARIADB="keyserver.ubuntu.com 0xcbcb082a1bb943db" # Clé GPG permettant de vérifier l'intégrité du dépôt
 VAR_SQL_MARIADB_PORT="3306"
-
+VAR_SQL_MARIADB_BINDADDRESS="bind-address            = 127.0.0.1"
