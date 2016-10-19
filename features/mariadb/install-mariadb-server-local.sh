@@ -88,6 +88,8 @@ do
 		break
 	fi
 done
+sed -i "s/$VAR_SQL_MARIADB_PORT/$PORT_SQL/g" $FILE_MARIADB_MY_CNF
+
 # LOCAL : Modifier le compte root
 while true
 do
@@ -100,3 +102,6 @@ do
 	fi
 done
 exec_command "mysql -u root -p'$PASSWORD1' -q 'UPDATE mysql.user SET USER='$COMPTE_ROOT' WHERE USER='root'; FLUSH PRIVILEGES;"
+
+# LOCAL : Redémarrer le service
+exec_service_restart "$VAR_SERVICE_MARIADB"
