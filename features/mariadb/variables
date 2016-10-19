@@ -5,6 +5,7 @@ PATH_CONFS="$PATH_FEATURE_MARIADB/confs"
 
 PATH_MYSQL="/etc/mysql"
 PATH_INIT_D="/etc/init.d"
+PATH_TMP="/tmp"
 ####################################
 # FICHIERS
 ####################################
@@ -23,6 +24,8 @@ FILE_MARIADB_DEBIAN_INIT_SRC="$PATH_CONFS/mysql"
 FILE_MARIADB_DEBIAN_INIT_DST="$PATH_INIT_D/mysql"
 
 FILE_MARIADB_MY_CNF="$PATH_MYSQL/my.cnf"
+
+FILE_SQL_UPDATE_USER_ROOT="$PATH_TMP/update-user-root.sql"
 ####################################
 # VARIABLES
 ####################################
