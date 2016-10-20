@@ -31,15 +31,15 @@ for RESULTAT in $(echo $RESULTATS | sed 's/\"//g' | tr ' ' '\n');
 do
 	case "$RESULTAT" in
 		"Nginx") 
-			#bash $SCRIPT_INSTALL_NGINX $PATH_CURRENT $LOG_FILE
-			#bash $SCRIPT_CONFIG_NGINX $PATH_CURRENT $LOG_FILE
+			bash $SCRIPT_INSTALL_NGINX $PATH_CURRENT $LOG_FILE
+			bash $SCRIPT_CONFIG_NGINX $PATH_CURRENT $LOG_FILE
 		;;
 		"Php7-fpm") 
-                        #bash $SCRIPT_INSTALL_PHP7FPM $PATH_CURRENT $LOG_FILE
-                        #bash $SCRIPT_CONFIG_PHP7FPM $PATH_CURRENT $LOG_FILE
+                        bash $SCRIPT_INSTALL_PHP7FPM $PATH_CURRENT $LOG_FILE
+                        bash $SCRIPT_CONFIG_PHP7FPM $PATH_CURRENT $LOG_FILE
 		;;
 		"Mariadb-server")
-                        #bash $SCRIPT_INSTALL_MARIADB_SERVER $PATH_CURRENT $LOG_FILE
+                        bash $SCRIPT_INSTALL_MARIADB_SERVER $PATH_CURRENT $LOG_FILE
                 ;;
 		"Mariadb-client") 
                         bash $SCRIPT_INSTALL_MARIADB_CLIENT $PATH_CURRENT $LOG_FILE
