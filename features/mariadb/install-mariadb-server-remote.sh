@@ -73,23 +73,28 @@ do
         fi
 done
 
-# REMOTE : Lancer script $SCRIPT_INSTALL_MARIADB_SERVER_REMOTE
-#exec_ssh_script "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "$SCRIPT_CONFIG_MARIADB_SERVER_REMOTE"
 aff_titre "Installation de MariaDB Serveur sur le serveur $SSH_SERVER"
+
 # REMOTE : Install Prérequis
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo aptitude -q=1 install python-software-properties software-properties-common -y"
 [ $? -eq 0 ] && aff_message "ok" "Installation des prérequis" || aff_message "err" "Installation des prérequis"
+
 # REMOTE : Import de la clé GPG
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db"
 [ $? -eq 0 ] && aff_message "ok" "Importation de la clé GPG permettant de vérifier l'intégrité du dépôt" || aff_message "err" "Importation de la clé GPG permettant de vérifier l'intégrité du dépôt"
+
 # REMOTE : Ajouter le dépôt mariadb.list - COPY SCP
-exec_ssh_copy "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "$FILE_MARIADB_DEPOT_SRC" "$FILE_MARIADB_DEPOT_DST"
-[ $? -eq 0 ] && aff_message "ok" "Copie du fichier $(aff_important "$FILE_MARIADB_DEPOT_SRC") vers $(aff_important "$FILE_MARIADB_DEPOT_DST")" || aff_message "err" "Copie du fichier $(aff_important "$FILE_MARIADB_DEPOT_SRC") vers $(aff_important "$FILE_MARIADB_DEPOT_DST")"
+#exec_ssh_copy "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "$FILE_MARIADB_DEPOT_SRC" "$FILE_MARIADB_DEPOT_DST"
+#[ $? -eq 0 ] && aff_message "ok" "Copie du fichier $(aff_important "$FILE_MARIADB_DEPOT_SRC") vers $(aff_important "$FILE_MARIADB_DEPOT_DST")" || aff_message "err" "Copie du fichier $(aff_important "$FILE_MARIADB_DEPOT_SRC") vers $(aff_important "$FILE_MARIADB_DEPOT_DST")"
+exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo su -c 'echo \"$VAR_APT_MARIADB_DEPOT\" > $FILE_MARIADB_DEPOT_DST'"
+[ $? -eq 0 ] && aff_message "ok" "Ajout du dépôt pour $(aff_important "mariadb")" || aff_message "err" "Ajout du dépôt pour $(aff_important "mariadb")"
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo chown root:root $FILE_MARIADB_DEPOT_DST"
 [ $? -eq 0 ] && aff_message "ok" "Changement du propriétaire du fichier $(aff_important "$FILE_MARIADB_DEPOT_DST")" || aff_message "err" "Changement du propriétaire du fichier $(aff_important "$FILE_MARIADB_DEPOT_DST")"
+
 # REMOTE : Mise à jour des paquets
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo aptitude -q=1 update -y"
 [ $? -eq 0 ] && aff_message "ok" "Mise à jour des paquets" || aff_message "err" "Mise à jour des paquets"
+
 # REMOTE : Mot de passe root
 while true
 do
@@ -127,12 +132,15 @@ done
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo debconf-set-selections <<< \"maria-db-10.1 mysql-server/root_password password $PASSWORD1\""
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo debconf-set-selections <<< \"maria-db-10.1 mysql-server/root_password_again password $PASSWORD2\""
 [ $? -eq 0 ] && aff_message "ok" "Configuration du mot de passe MYSQL pour l'utilisateur root" || aff_message "err" "Configuration du mot de passe MYSQL pour l'utilisateur root"
+
 # REMOTE : Installer mariadb-server 
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo aptitude -q=2 install mariadb-server -y"
 [ $? -eq 0 ] && aff_message "ok" "Installation du paquet $(aff_important "$VAR_APT_MARIADB_SERVER")" || aff_message "err" Installation du paquet $(aff_important "$VAR_APT_MARIADB_SERVER")""
+
 # REMOTE : Installer mariadb-client
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo aptitude -q=1 install mariadb-client -y"
 [ $? -eq 0 ] && aff_message "ok" "Installation du paquet $(aff_important "$VAR_APT_MARIADB_CLIENT")" || aff_message "err" "Installation du paquet $(aff_important "$VAR_APT_MARIADB_CLIENT")"
+
 # REMOTE : Copie du fichier features/mariadb/confs/debian-start dans /etc/mysql/
 #exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" ""
 # REMOTE : Copie du fichier features/mariadb/confs/mysql dans /etc/init.d/
@@ -140,28 +148,20 @@ exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo aptitude -q=1 insta
 # REMOTE : Redémarrer le service
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo service mysql restart"
 [ $? -eq 0 ] && aff_message "ok" "Redémarrage du service mysql" || aff_message "err" "Redémarrage du service mysql"
+
 # REMOTE : Lancer mysql_secure_installation
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo aptitude -q=1 install expect -y"
 [ $? -eq 0 ] && aff_message "ok" "Installation du paquet $(aff_important "expect")" || aff_message "err" "Installation du paquet $(aff_important "expect")"
-exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo expect -c \"
-set timeout 3
-spawn mysql_secure_installation
-expect \"Enter current password for root (enter for none):\"
-send \"$PASSWORD1\r\"
-expect \"root password?\"
-send \"n\r\"
-expect \"Remove anonymous users?\"
-send \"y\r\"
-expect \"Disallow root login remotely?\"
-send \"y\r\"
-expect \"Remove test database and access to it?\"
-send \"y\r\"
-expect \"Reload privilege tables now?\"
-send \"y\r\"
-expect eof\""
+
+exec_ssh_copy "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "$FILE_MARIADB_SCRIPT_SECURE_SRC" "$FILE_MARIADB_SCRIPT_SECURE_DST"
+[ $? -eq 0 ] && aff_message "ok" "Copie du script de sécurisation de mysql" || aff_message "err" "Copie du script de sécurisation de mysql"
+
+exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo bash $FILE_MARIADB_SCRIPT_SECURE_DST $PASSWORD1"
 [ $? -eq 0 ] && aff_message "ok" "Sécurisation de l'installation du serveur MariaDB" || aff_message "err" "Sécurisation de l'installation du serveur MariaDB"
+
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo aptitude purge expect -y"
 [ $? -eq 0 ] && aff_message "ok" "Suppression du paquet $(aff_important "expect")" || aff_message "err" "Suppression du paquet $(aff_important "expect")"
+
 # REMOTE : Modifier port d'écoute
 while true
 do
@@ -173,14 +173,16 @@ do
                 break
         fi
 done
-exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sed -i -e \"s/$VAR_SQL_MARIADB_PORT/$PORT_SQL/g\" $FILE_MARIADB_MY_CNF"
+
+exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo sed -i -e \"s/$VAR_SQL_MARIADB_PORT/$PORT_SQL/g\" $FILE_MARIADB_MY_CNF"
 if [ $? -eq 0 ]; then
         aff_message "ok" "Modification du port d'écoute Mysql en $(aff_important "$PORT_SQL")"
 else
         aff_message "err" "Modification du port d'écoute Mysql en $(aff_important "$PORT_SQL")"
 fi
-# REMOTE : Modifier l'adresse d'écoute
-exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sed -i -e \"s/$VAR_SQL_MARIADB_BINDADDRESS/bind-address = $SSH_SERVER/\" $FILE_MARIADB_MY_CNF"
+
+# REMOTE : Modifier l'adresse IP d'écoute
+exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo sed -i -e \"s/$VAR_SQL_MARIADB_BINDADDRESS/bind-address = $SSH_SERVER/\" $FILE_MARIADB_MY_CNF"
 if [ $? -eq 0 ]; then
         aff_message "ok" "Modification de l'adresse d'écoute du serveur Mysql"
 else
@@ -198,13 +200,21 @@ do
         fi
 done
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo mysql -u root -p$PASSWORD1 -e \"RENAME USER 'root'@'127.0.0.1' TO '$COMPTE_ROOT'@'127.0.0.1';\""
+[ $? -eq 0 ] && aff_message "ok" "Modification du nom d'utilisateur du compte root par $(aff_important "$COMPTE_ROOT") à partir de $(aff_important "127.0.0.1")" || aff_message "err" "Modification du nom d'utilisateur du compte root par $(aff_important "$COMPTE_ROOT") à partir de $(aff_important "127.0.0.1")"
+
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo mysql -u root -p$PASSWORD1 -e \"RENAME USER 'root'@'::1' TO '$COMPTE_ROOT'@'::1';\""
+[ $? -eq 0 ] && aff_message "ok" "Modification du nom d'utilisateur du compte root par $(aff_important "$COMPTE_ROOT") à partir de $(aff_important "::1")" || aff_message "err" "Modification du nom d'utilisateur du compte root par $(aff_important "$COMPTE_ROOT") à partir de $(aff_important "::1")"
+
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo mysql -u root -p$PASSWORD1 -e \"RENAME USER 'root'@'localhost' TO '$COMPTE_ROOT'@'localhost';\""
-[ $? -eq 0 ] && aff_message "ok" "Modification du nom d'utilisateur du compte root par $(aff_important "$COMPTE_ROOT")" || aff_message "err" "Modification du nom d'utilisateur du compte root par $(aff_important "$COMPTE_ROOT")"
+[ $? -eq 0 ] && aff_message "ok" "Modification du nom d'utilisateur du compte root par $(aff_important "$COMPTE_ROOT") à partir de $(aff_important "localhost")" || aff_message "err" "Modification du nom d'utilisateur du compte root par $(aff_important "$COMPTE_ROOT") à partir de $(aff_important "localhost")"
+
 # REMOTE : Autoriser les connexions distantes depuis le serveur Web
-exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo mysql -u root -p$PASSWORD1 -e \"GRANT ALL PRIVILEGES ON *.* TO '$COMPTE_ROOT'@'$WEB_SERVER' IDENTIFIED BY '$PASSWORD1' WITH GRANT OPTION;\""
+exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo mysql -u $COMPTE_ROOT -p$PASSWORD1 -e \"GRANT ALL PRIVILEGES ON *.* TO '$COMPTE_ROOT'@'$WEB_SERVER' IDENTIFIED BY '$PASSWORD1' WITH GRANT OPTION;\""
 [ $? -eq 0 ] && aff_message "ok" "Autorisation de connexion de l'utilisateur MYSQL $(aff_important "$COMPTE_ROOT") depuis le serveur Web" || aff_message "err" "Autorisation de connexion de l'utilisateur MYSQL $(aff_important "$COMPTE_ROOT") depuis le serveur Web"
-exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo mysql -u root -p$PASSWORD1 -e \"FLUSH PRIVILEGES;\""
+
+exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo mysql -u $COMPTE_ROOT -p$PASSWORD1 -e \"FLUSH PRIVILEGES;\""
+[ $? -eq 0 ] && aff_message "ok" "Rechargement des privilèges MYSQL" || aff_message "err" "Rechargement des privilèges MYSQL"
+
 # REMOTE : Redémarrer le service
 exec_ssh_command "$SSH_USER" "$SSH_PASS" "$SSH_SERVER" "sudo service mysql restart"
 [ $? -eq 0 ] && aff_message "ok" "Redémarrage du service $(aff_important "mysql")" || aff_message "err" "$(aff_important "mysql")"
