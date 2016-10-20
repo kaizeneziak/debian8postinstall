@@ -48,9 +48,7 @@ do
                 fi
 	fi
 done
-#exec_sed_mariadb "$VAR_SQL_MARIADB_BINDADDRESS" "bind-address = $MARIADB_SERVER_IP"
-aff_message "debug" "sed -i 's/$VAR_SQL_MARIADB_BINDADDRESS/bind-address = $MARIADB_SERVER_IP/' $FILE_MARIADB_MY_CNF"
-exec_command "sed -i \'s/$VAR_SQL_MARIADB_BINDADDRESS/bind-address = $MARIADB_SERVER_IP/\' $FILE_MARIADB_MY_CNF"
+sed -i -e "s/$VAR_SQL_MARIADB_BINDADDRESS/bind-address = $MARIADB_SERVER_IP/" $FILE_MARIADB_MY_CNF >> $LOG_FILE 2>&1
 [ $? -eq 0 ] && aff_message "ok" "Modification de la directive $(aff_important "bind-address")" || aff_message "err" "Modification de la directive $(aff_important "bind-address")"
 # WHIPTAIL : Port d'écoute du serveur
 while true
@@ -63,8 +61,7 @@ do
                 break
         fi
 done
-#exec_sed_mariadb "$VAR_SQL_MARIADB_PORT" "$MARIADB_SERVER_PORT"
-exec_command "sed -i \'s/$VAR_SQL_MARIADB_PORT/$MARIADB_SERVER_PORT/g\' $FILE_MARIADB_MY_CNF"
+sed -i -e "s/$VAR_SQL_MARIADB_PORT/$MARIADB_SERVER_PORT/g" $FILE_MARIADB_MY_CNF >> $LOG_FILE 2>&1
 [ $? -eq 0 ] && aff_message "ok" "Modification de la directive $(aff_important "port")" || aff_message "err" "Modification de la directive $(aff_important "port")" 
 # TEST CONNEXION
 whiptail --title " Information " --msgbox "\nUn test va être réalisé afin de vérifier que le client mariadb est opérationnel." 9 50
@@ -102,7 +99,7 @@ do
 	# Test
 	test_mariadb "$MARIADB_SERVER_ADMIN" "$MARIADB_SERVER_PASS" "$MARIADB_SERVER_IP" "$MARIADB_SERVER_PORT"
 	if [ $? -eq 0 ]; then
-                whiptail --title " Réussite du test " --msgbox "\nLe client MariaDB est à présent configuré." 8 37
+                whiptail --title " Réussite du test " --msgbox "\nLe client MariaDB est à présent configuré." 8 47
 		break
 	else
 		whiptail --title "Erreur !" --msgbox "Une erreur est survenue !\n\n- Vérifier que l'utilisateur \"$MARIADB_SERVER_ADMIN\" est autorisé à se connecter\nau serveur MariaDB depuis l'adresse IP \"$WEB_SERVER\"\n- Vérifier que l'utilisateur \"$MARIADB_SERVER_ADMIN\" dispose bien des droits d'administrations\n- Si tel n'est pas le cas, exécuter la commande suivante sur le serveur MariaDB :\n\nmysql -u [admin] -p [password] -e \"GRANT ALL PRIVILEGES ON *.* TO '$MARIADB_SERVER_ADMIN'@'$WEB_SERVER' IDENTIFIED BY '[password]' WITH GRANT OPTION; FLUSH PRIVILEGES;\"\n\nEn remplaçant :\n    - [admin] par le login de l'administrateur\n    - [password] par le mot de passe de l'administrateur" 20 95
