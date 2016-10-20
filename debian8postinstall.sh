@@ -40,7 +40,6 @@ do
 		;;
 		"Mariadb-server")
                         bash $SCRIPT_INSTALL_MARIADB_SERVER $PATH_CURRENT $LOG_FILE
-                        #bash $SCRIPT_CONFIG_MARIADB_SERVER $PATH_CURRENT $LOG_FILE
                 ;;
 		"Mariadb-client") 
                         #bash $SCRIPT_INSTALL_MARIADB_CLIENT $PATH_CURRENT $LOG_FILE
