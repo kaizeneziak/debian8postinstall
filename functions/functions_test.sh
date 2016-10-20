@@ -45,8 +45,8 @@ test_mariadb () {
         MARIADB_SERVER=$3
 	MARIADB_PORT=$4
 
-        exec_command "mysql -u $MARIADB_USER -h $MARIADB_SERVER -P $MARIADB_PORT -p'$MARIADB_PASS' -e \"SHOW DATABASES;\""
-        if [ $? -eq 0 ]; then
+        mysql -s -N -u $MARIADB_USER -h $MARIADB_SERVER -p$MARIADB_PASS -e "select user,host from mysql.user" >> $LOG_FILE 2>&1
+	if [ $? -eq 0 ]; then
                 RETOUR=0
         else
                 RETOUR=1
