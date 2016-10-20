@@ -3,8 +3,8 @@
 Ce script shell permet de réaliser diverses opérations après l'installation d'une machine sous Debian 8 Jessie :
 - Installation et configuration de **Nginx** 
 - Installation et configuration de **Php7-fpm**
-- Installation et configuration de **Mariadb-client** (en développement)
-- Installation et configuration de **Mariadb-server** (en développement)
+- Installation et configuration de **Mariadb-server**
+- Installation et configuration de **Mariadb-client**
 - Installation et configuration de **Let's Encrypt** (en développement)
 - Installation et configuration de **Varnish 4.0 Cache** (en développement)
 - Installation et configuration de **Wordpress** (en développement)
