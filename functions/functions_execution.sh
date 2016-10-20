@@ -362,7 +362,7 @@ exec_sed_mariadb () {
         MODIFICATION=$2
         FILE=$FILE_MARIADB_MY_CNF
 
-        exec_command "sudo sed -i -e 's/$MOT/$MODIFICATION/g' $FILE"
+        exec_command "sudo su -c 'sed -i -e \"s/$MOT/$MODIFICATION/g\" $FILE'"
         if [ $? -eq 0 ]; then
                 aff_message "ok" "Remplacement de l'expression $(aff_important $1) par $(aff_important $2) dans le fichier $($FILE)"
         else
