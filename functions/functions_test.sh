@@ -39,7 +39,7 @@ test_ssh () {
 #     	Tester une connexion au serveur MariaDB
 # UTILISATION
 #       test_ssh "$MARIADB_USER" "$MARIADB_PASS" "$MARIADB_SERVER" "$MARIADB_PORT"
-test_ssh () {
+test_mariadb () {
         MARIADB_USER=$1
         MARIADB_PASS=$2
         MARIADB_SERVER=$3
