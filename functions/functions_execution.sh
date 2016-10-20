@@ -347,6 +347,30 @@ exec_sed_uniq () {
         fi
 }
 
+# FONCTION
+#       exec_sed_mariadb $1 $2
+# PARAMETRES
+#       $1 : Expression à remplacer
+#       $2 : Expression de remplacement
+# BUT
+#       Modifier une expression dans le fichier /etc/mysql/my.cnf
+# UTILISATION
+#       exec_sed "$MOT" "$MODIFICATION"
+exec_sed_mariadb () {
+        #set -x
+        MOT=$1
+        MODIFICATION=$2
+        FILE=$FILE_MARIADB_MY_CNF
+
+        exec_command "sed -i -e 's/$MOT/$MODIFICATION/g' $FILE"
+        if [ $? -eq 0 ]; then
+                aff_message "ok" "Remplacement de l'expression $(aff_important $1) par $(aff_important $2) dans le fichier $($FILE)"
+        else
+                aff_message "err" "Remplacement de l'expression $(aff_important $1) par $(aff_important $2) dans le fichier $($FILE)"
+        fi
+}
+
+
 ##################################################################################################################
 # SERVICES
 ##################################################################################################################
