@@ -49,7 +49,8 @@ do
 	fi
 done
 #exec_sed_mariadb "$VAR_SQL_MARIADB_BINDADDRESS" "bind-address = $MARIADB_SERVER_IP"
-exec_command "sed -i -e \"s/$VAR_SQL_MARIADB_BINDADDRESS/bind-address = $MARIADB_SERVER_IP\" $FILE_MARIADB_MY_CNF"
+aff_message "debug" "sed -i -e 's/$VAR_SQL_MARIADB_BINDADDRESS/bind-address = $MARIADB_SERVER_IP/' $FILE_MARIADB_MY_CNF"
+exec_command "sed -i -e 's/$VAR_SQL_MARIADB_BINDADDRESS/bind-address = $MARIADB_SERVER_IP/' $FILE_MARIADB_MY_CNF"
 [ $? -eq 0 ] && aff_message "ok" "Modification de la directive $(aff_important "bind-address")" || aff_message "err" "Modification de la directive $(aff_important "bind-address")"
 # WHIPTAIL : Port d'écoute du serveur
 while true
@@ -63,7 +64,7 @@ do
         fi
 done
 #exec_sed_mariadb "$VAR_SQL_MARIADB_PORT" "$MARIADB_SERVER_PORT"
-exec_command "sudo sed -i -e \"s/$VAR_SQL_MARIADB_PORT/$MARIADB_SERVER_PORT/g\" $FILE_MARIADB_MY_CNF"
+exec_command "sed -i -e 's/$VAR_SQL_MARIADB_PORT/$MARIADB_SERVER_PORT/g' $FILE_MARIADB_MY_CNF"
 [ $? -eq 0 ] && aff_message "ok" "Modification de la directive $(aff_important "port")" || aff_message "err" "Modification de la directive $(aff_important "port")" 
 # TEST CONNEXION
 whiptail --title " Information " --msgbox "\nUn test va être réalisé afin de vérifier que le client mariadb est opérationnel." 9 50
