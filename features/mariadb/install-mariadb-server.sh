@@ -21,12 +21,12 @@ LOG_FILE=$2
 
 # Whiptail Server local ou distant ?
 CHOIX=$(whiptail --title "Installation du serveur MariaDB " --menu "\nQuel type d'installation souhaitez-vous effectuer ?" 12 89 2 \
-"Local" "Installe le paquet mariadb-server sur la machine locale" \
+"Local" "Installe les paquets mariadb-server et mariadb-client sur la machine locale" \
 "Remote" "Installe les paquets mariadb-server et mariadb-client sur un serveur distant" 3>&1 1>&2 2>&3)
 
 if [[ $CHOIX == "Local" ]]; then
 	aff_titre "Installation de MariaDB Serveur en local"
-	#bash $SCRIPT_INSTALL_MARIADB_SERVER_LOCAL $PATH_DEBIAN8POSTINSTALL $LOG_FILE
+	bash $SCRIPT_INSTALL_MARIADB_SERVER_LOCAL $PATH_DEBIAN8POSTINSTALL $LOG_FILE
 fi
 if [[ $CHOIX == "Remote" ]]; then
 	bash $SCRIPT_INSTALL_MARIADB_SERVER_REMOTE $PATH_DEBIAN8POSTINSTALL $LOG_FILE
