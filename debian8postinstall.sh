@@ -18,11 +18,11 @@ aff_titre "Installation des prérequis"
 exec_apt_install_uniq "$APT_WHIPTAIL"
 # Programme
 RESULTATS=$(whiptail --title "Debian 8 Jessie Post-installation" --checklist \
-"\nCe script post-installation permet d'installer et de configurer différents paquets. Sélectionner ceux que vous souhaitez installer dans la liste ci-dessous.\n\nPar défaut, tous les paquets sont cochés.\n\nQue souhaitez vous faire ?" 23 71 7 \
+"\nCe script post-installation permet d'installer et de configurer différents paquets. Sélectionner ceux que vous souhaitez installer dans la liste ci-dessous.\n\nPar défaut, tous les paquets sont cochés.\n\nQue souhaitez vous faire ?" 23 91 7 \
 "Nginx" "Installer et configurer NGINX" ON \
 "Php7-fpm" "Installer et configurer PHP7-FPM" ON \
 "Mariadb-server" "Installer et configurer Mariadb-Server" ON \
-"Mariadb-client" "Installer et configurer Mariadb-Client" ON \
+"Mariadb-client" "Installer et configurer Mariadb-Client avec un serveur distant" ON \
 "Lets-encrypt" "Installer et configurer Let's Encrypt" ON \
 "Varnish" "Installer et configurer Varnish 4.0 Cache" ON \
 "Wordpress" "Installer et configurer Wordpress" OFF 3>&1 1>&2 2>&3)
@@ -39,11 +39,10 @@ do
                         #bash $SCRIPT_CONFIG_PHP7FPM $PATH_CURRENT $LOG_FILE
 		;;
 		"Mariadb-server")
-                        bash $SCRIPT_INSTALL_MARIADB_SERVER $PATH_CURRENT $LOG_FILE
+                        #bash $SCRIPT_INSTALL_MARIADB_SERVER $PATH_CURRENT $LOG_FILE
                 ;;
 		"Mariadb-client") 
-                        #bash $SCRIPT_INSTALL_MARIADB_CLIENT $PATH_CURRENT $LOG_FILE
-                        #bash $SCRIPT_CONFIG_MARIADB_CLIENT $PATH_CURRENT $LOG_FILE
+                        bash $SCRIPT_INSTALL_MARIADB_CLIENT $PATH_CURRENT $LOG_FILE
 		;;
                 "Lets-encrypt") 
                         #bash $SCRIPT_INSTALL_LETSENCRYPT $PATH_CURRENT $LOG_FILE
